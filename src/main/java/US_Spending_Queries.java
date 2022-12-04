@@ -61,7 +61,7 @@ public class US_Spending_Queries {
      * Author   -> Dan Murphy
      * Method   -> getQuarter()
      * Purpose  -> Method which prompts the user to enter a number between
-     *             1 and 4
+     *             1 and 4.
      * -----------------------------------------------------------------------
      * Receives -> NONE
      * Returns  -> int
@@ -140,7 +140,7 @@ public class US_Spending_Queries {
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
-     * Method   -> void quarterHelper(String state, String caseResult)
+     * Method   -> void quarterHelper()
      * Purpose  -> Helper function which allows Quarterly Reports to be shown.
      * -----------------------------------------------------------------------
      * Receives -> NONE
