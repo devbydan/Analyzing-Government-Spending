@@ -8,7 +8,7 @@ import java.io.*;
 import java.io.BufferedReader;
 import java.util.Scanner;
 
-public class Queries {
+public class US_Spending_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
@@ -25,7 +25,7 @@ public class Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    public US_Spending_Queries(String filePath, SparkSession sparkSession)
+    US_Spending_Queries(String filePath, SparkSession sparkSession)
     {
         this.sparkSession = sparkSession;
         this.df = sparkSession
@@ -40,7 +40,7 @@ public class Queries {
 
 
     public static void getTotalAmountAwardedByGroup() throws Exception {
-        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total FROM spending GROUP BY recipient_name ASC;")
+        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total FROM USA GROUP BY recipient_name").show();
     }
 
 

@@ -124,7 +124,7 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     public static void queryUSSpending(SparkSession sparkSession) throws Exception {
-        US_Spending_Queries db = new US_Spending_Queries("hdfs://localhost:9000/Analyzing-Government-Spending/award.csv", sparkSession); // Grabs the file from dir
+        US_Spending_Queries db = new US_Spending_Queries("hdfs://localhost:9000/US-Spending/Contracts_PrimeTransactions_2022-11-23_H17M10S30_1.csv", sparkSession); // Grabs the file from dir
         Scanner input = new Scanner(System.in); // Grabs the input from the keyboard
         int choice; // User choice from the terminal
 
