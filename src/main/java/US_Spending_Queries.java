@@ -39,8 +39,8 @@ public class Queries {
     } // ---------------------------------------------------------------------
 
 
-    public static void testQuery() throws Exception {
-        sparkSession.sql("SELECT * FROM ")
+    public static void getTotalAmountAwardedByGroup() throws Exception {
+        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total FROM spending GROUP BY recipient_name ASC;")
     }
 
 

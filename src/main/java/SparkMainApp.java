@@ -71,7 +71,7 @@ public class SparkMainApp {
      */
     public static void queryMenu(){
         System.out.println("0. None, Go Back\n" +
-                "1. Test Query\n");
+                "1. Get Total Amount Awarded by Group\n");
 
     } // ---------------------------------------------------------------------
 
@@ -135,7 +135,7 @@ public class SparkMainApp {
         // User choice via terminal --- 0 to exit, 1 to access US Spending Data queries
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
-                case 1: db.testQuery(); break;
+                case 1: db.getTotalAmountAwardedByGroup(); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project
