@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class US_Spending_Queries {
     public static Dataset<Row> df; // TODO: fix temp public
 
-    private static SparkMainApp sma = new SparkMainApp(); // Used to call helper terminal-menu functions
+    private static SparkMainApp sparkMenu = new SparkMainApp(); // Used to call helper terminal-menu functions
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
 
@@ -106,6 +106,100 @@ public class US_Spending_Queries {
                        + " ORDER BY total DESC;").show(1000, false);
 
     }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> getAwardTotalByQuarterOfTheYear()
+     * Purpose  -> Method which returns the total award amount within a
+     *             specified quarter of the year (1-4)
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> int, date
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
+    public static void getAwardTotalByQuarterOfTheYear() throws Exception {
+
+        // Prime the conditional query
+        int quarter = getQuarter();
+
+        /* First Quarter => Jan 1 - Mar 31 */
+        if (quarter == 1) {
+            Dataset<Row> df = quarterOne();
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-01-01","2022-01-31"))
+                    .show(35,false);
+
+            df.select(df.col("action_date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                    .filter(df.col("action_date").between("2022-02-01","2022-02-28"))
+                    .show(35,false);
+
+            df.select(df.col("action_date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                    .filter(df.col("action_date").between("2022-03-01","2022-03-31"))
+                    .show(35,false);
+        // ----------------------------------------------------------------------------------
+        /* Second Quarter => Apr 1 - June 30 */
+        } else if (quarter == 2) { 
+            Dataset<Row> df = quarterTwo(state,caseResult);
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-04-01", "2022-04-30"))
+                    .show(35, false);
+            TimeUnit.SECONDS.sleep(3);
+
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-05-01", "2022-05-31"))
+                    .show(35, false);
+            TimeUnit.SECONDS.sleep(3);
+
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-06-01", "2022-06-30"))
+                    .show(35, false);
+
+            sparkMenu.waitAndClear();
+        // ----------------------------------------------------------------------------------
+        /* Third Quarter => Jul 1 - Sep 31 */
+        } else if (quarter == 3) {
+            Dataset<Row> df = quarterThree();
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-07-01", "2022-07-31"))
+                    .show(35, false);
+            TimeUnit.SECONDS.sleep(3);
+
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-08-01", "2022-08-31"))
+                    .show(35, false);
+            TimeUnit.SECONDS.sleep(3);
+
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-09-01", "2022-09-30"))
+                    .show(35, false);
+
+            sparkMenu.waitAndClear();
+        // ----------------------------------------------------------------------------------
+        /* Fourth Quarter => Oct 1 - Dec 31 */
+        } else if (quarter == 4) {
+            Dataset<Row> df = quarterFour();
+
+            // October
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("action_date").between("2022-10-01", "2022-10-30"))
+                    .show(35, false);
+            TimeUnit.SECONDS.sleep(3);
+
+            // November
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("date").between("2022-11-01", "2022-11-30"))
+                    .show(35, false);
+            TimeUnit.SECONDS.sleep(3);
+
+            // December
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
+                    .filter(df.col("date").between("2022-12-01", "2022-12-31"))
+                    .show(35, false);
+            sparkMenu.waitAndClear();
+        }// End of quarter conditions ---
+} // ---------------------------------------------------------------------
 
     /* ---------------------------------------------------------------------- */
                             /* >>> Helper functions <<< */
