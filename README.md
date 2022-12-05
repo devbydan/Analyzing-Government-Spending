@@ -219,10 +219,11 @@ $ ./spark-submit --class Analyzing-Government-Spending.SparkMainApp /home/user/I
 
 ## Functionality
 
-- [x] Number of Awards per Entity
-- [x] Total Award per Recipient Group
-- [ ] Total Award Amount by Date Range
-- [ ] Total Award per Quarter
-- [ ] Top 'K' Awards by Entity
-- [ ] List Quarterly Reports by Award Amount
-
+- [x] Get Total Amount Awarded by Group
+- [x] Get # of Awards Per Entity
+- [x] Get Total Award Amount By Date Range
+- [x] Get Total Award Amount By Quarter
+- [x] Show Top 'K' Awarded Amounts Per Entity
+- [x] List Quarterly Reports
+- [x] Show List of Recent Events
+- [x] Look Up Entity
