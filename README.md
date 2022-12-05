@@ -217,3 +217,12 @@ Example input for reference:
 $ ./spark-submit --class Analyzing-Government-Spending.SparkMainApp /home/user/IdeaProjects/Analyzing-Government-Spending/target/test-1.8-SNAPSHOT.jar --master Spark://user:7077
 ```
 
+## Functionality
+
+- [x] Number of Awards per Entity
+- [x] Total Award per Recipient Group
+- [ ] Total Award Amount by Date Range
+- [ ] Total Award per Quarter
+- [ ] Top 'K' Awards by Entity
+- [ ] List Quarterly Reports by Award Amount
+
