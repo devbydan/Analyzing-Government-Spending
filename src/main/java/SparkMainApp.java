@@ -72,7 +72,7 @@ public class SparkMainApp {
     public static void queryMenu(){
         System.out.println("0. None, Go Back\n" +
                 "1. Get Total Amount Awarded by Group\n" +
-                "2. Test Query Helper\n");
+                "2. Get # of Awards Per Entity\n");
 
     } // ---------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ public class SparkMainApp {
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1: db.getTotalAmountAwardedByGroup(); break;
-                case 2: db.quarterHelper(); break; // TODO: remove eventually probably
+                case 2: db.getNumOfAwardsPerEntity(); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project

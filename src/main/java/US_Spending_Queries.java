@@ -18,8 +18,8 @@ public class US_Spending_Queries {
      * Author   -> Dan Murphy
      * Method   -> US_Spending_Queries(String filePath, SparkSession sparkSession)
      * Purpose  -> Constructor that sets the private data field Dataset<Row>
-                   and SparkSession. Afterwards, create the temporary view of
-                   the csv file that will be looked at.
+     *             and SparkSession. Afterwards, create the temporary view of
+     *             the csv file that will be looked at.
      * -----------------------------------------------------------------------
      * Receives -> String, SparkSession
      * Returns  -> NONE
@@ -50,11 +50,30 @@ public class US_Spending_Queries {
      * Returns  -> int
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
+    /* /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// */
     public static void getTotalAmountAwardedByGroup() throws Exception {
         sparkSession.sql("SELECT recipient_name AS recipient, SUM(total_dollars_obligated) AS total FROM USA GROUP BY recipient_name").show();
     }
 
-    /* >>> Helper functions <<< */
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> getTotalAmountAwardedByGroup()
+     * Purpose  -> Method which returns the number of award transactions each
+     *             entity/recipient has been given
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> int
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
+    public static void getNumOfAwardsPerEntity() throws Exception {
+        sparkSession.sql("SELECT COUNT(*) AS num_of_awards FROM USA GROUP BY recipient_name").show();
+    }
+
+    /* ---------------------------------------------------------------------- */
+                            /* >>> Helper functions <<< */
+    /* ---------------------------------------------------------------------- */
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
