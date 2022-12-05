@@ -189,13 +189,94 @@ public class SparkMainApp {
                 case 5: db.topKAwardsByEntity(); break;
                 case 6: db.listTotalQuarterlyReportsByAwardAmount(); break;
                 case 7: db.listRecentlyAwardedFunds(); break;
-                case 8: db.tryFindEntityByName(); break;
+                case 8: entityLookUp(db); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project
             queryMenu(); // Prints the choice of queries
         }
     } // ---------------------------------------------------------------------
+
+     /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+             * Author   -> Ivann De la Cruz
+     * Method   -> entityLookUp()
+     * Purpose  -> Method which provides 1st layer lookup interface for entities
+     *              determines what column to look in
+     * -----------------------------------------------------------------------
+             * Receives -> US_Spending_Queries type
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void entityLookUp(US_Spending_Queries db) throws Exception {
+        Scanner entityLkUp_input = new Scanner(System.in); // Grabs the input from the keyboard
+        int ent_choice; // User choice from the terminal
+
+        clearScreen(); // Clears the screen
+        greeting();    // Title of the project
+
+        // print out options to find entity
+        System.out.println("0. Return\n" +
+                "1. Search for funding GIVER\n" +
+                "2. Search for funding RECEVIER\n");
+
+        while ((ent_choice = entityLkUp_input.nextInt()) != 0) {
+            switch (ent_choice) {
+                case 1: entityLookUp_QueryType(db, 1); break;
+                case 2: entityLookUp_QueryType(db, 2); break;
+                default:
+                    System.out.println("Invalid Input");
+                    break;
+            }
+            greeting();    // Title of the project
+
+            // print out options to find entity
+            System.out.println("0. Return\n" +
+                    "1. Search for funding GIVER\n" +
+                    "2. Search for funding RECEVIER\n");
+        }
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> entityLookUp_QueryType()
+     * Purpose  -> Method which provides user lookup interface for entities
+     *              level 2, type of query
+     * -----------------------------------------------------------------------
+     * Receives -> US_Spending_Queries type, integer indicating type giver 1
+     *              receiver 2
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void entityLookUp_QueryType(US_Spending_Queries db, int entType) throws Exception {
+        Scanner entityLkUp_input = new Scanner(System.in); // Grabs the input from the keyboard
+        String ent_choice = ""; // User choice from the terminal
+
+        clearScreen(); // Clears the screen
+        greeting();    // Title of the project
+
+        // inform user of lookup type
+        String noticeStr = "Looking for ";
+        if(entType == 1){ noticeStr += "giver"; }
+        else if(entType == 2){ noticeStr += "receiver"; }
+        System.out.println(noticeStr);
+
+        // print out options to find entity
+        System.out.println("Enter name or type 0 to return");
+
+        while (!(ent_choice = entityLkUp_input.nextLine()).equals("0")) {
+            if(db.tryFindEntityByName(entType, ent_choice)){
+                System.out.println("Found exact match!");
+                // TODO: lead to new menu
+                return; // for now
+            }
+            else{
+                System.out.println("\nEnter name or type 0 to return");
+            }
+        }
+    } // ---------------------------------------------------------------------
+
+
 
     /* MAIN TEST HARNESS */
     public static void main(String[] args) throws Exception {

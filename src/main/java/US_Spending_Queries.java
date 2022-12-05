@@ -7,6 +7,7 @@ import org.apache.spark.sql.*;
 import java.io.*;
 import java.io.BufferedReader;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class US_Spending_Queries {
     public static Dataset<Row> df; // DataFrame instance
@@ -56,7 +57,7 @@ public class US_Spending_Queries {
     public static void getTotalAmountAwardedByGroup() throws Exception {
         sparkSession.sql("SELECT recipient_name AS recipient, "
                        + "SUM(total_dollars_obligated) AS total "
-                       + "FROM USA GROUP BY recipient_name").show();
+                       + "FROM USA GROUP BY recipient_name").show(false);
     } // ---------------------------------------------------------------------
 
     /*
@@ -73,7 +74,7 @@ public class US_Spending_Queries {
     /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
     public static void getNumOfAwardsPerEntity() throws Exception {
         sparkSession.sql("SELECT COUNT(*) AS num_of_awards "
-                       + "FROM USA GROUP BY recipient_name").show();
+                       + "FROM USA GROUP BY recipient_name").show(false);
     } // ---------------------------------------------------------------------
 
     /*
@@ -100,10 +101,10 @@ public class US_Spending_Queries {
         String endDate = input.nextLine();
 
         // Query
-        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total, start_date" +
-                       + " FROM USA WHERE '" + startDate + "' <= start_date AND end_date <= '" + endDate
-                       + "' GROUP BY start_date" +
-                       + " ORDER BY total DESC;").show(1000, false);
+        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total, period_of_performance_start_date"
+                        + " FROM USA WHERE '" + startDate + "' <= period_of_performance_start_date AND period_of_performance_current_end_date <= '" + endDate
+                        + "' GROUP BY period_of_performance_start_date"
+                        + " ORDER BY total DESC;").show(1000, false);
 
     } // ---------------------------------------------------------------------
 
@@ -134,14 +135,16 @@ public class US_Spending_Queries {
                     .show(35,false);
 
             // February
-            df.select(df.col("action_date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
                     .filter(df.col("action_date").between("2022-02-01","2022-02-28"))
                     .show(35,false);
 
             // March
-            df.select(df.col("action_date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+            df.select(df.col("action_date"), df.col("recipient_name"), df.col("total_dollars_obligated"))
                     .filter(df.col("action_date").between("2022-03-01","2022-03-31"))
                     .show(35,false);
+
+            sparkMenu.waitAndClear();
         // ----------------------------------------------------------------------------------
         /* Second Quarter => Apr 1 - June 30 */
         } else if (quarter == 2) { 
@@ -242,8 +245,8 @@ public class US_Spending_Queries {
         }
 
         // Query
-        sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '"
-                + date + "' = action_date ORDER BY total_results_reported DESC;").show(K);
+        sparkSession.sql("SELECT recipient_name, total_dollars_obligated, action_date FROM USA WHERE '"
+                + date + "' = action_date ORDER BY total_dollars_obligated DESC;").show(K);
 
         // Terminal pause and clear
         sparkMenu.waitAndClear();
@@ -264,14 +267,14 @@ public class US_Spending_Queries {
     public static void listTotalQuarterlyReportsByAwardAmount() throws Exception {
 
         // Query per quarter respectively
-        Dataset<Row> dfQ1 = df1.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(1)),
-                     dfQ2 = df2.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(2)),
-                     dfQ3 = df3.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(3)),
-                     dfQ4 = df4.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(4));
+        Dataset<Row> dfQ1 = df.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(1)),
+                     dfQ2 = df.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(2)),
+                     dfQ3 = df.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(3)),
+                     dfQ4 = df.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(4));
 
         // Combine all quarters via UNION
-        Dataset<Row> allQ = df1Max.union(df2Max.union(df3Max.union(df4Max)));
-        allQ.orderBy(MAX.col("Total Funds").desc()).show(false);
+        Dataset<Row> allQ = dfQ1.union(dfQ2.union(dfQ3.union(dfQ4))); // TODO: Test
+        allQ.orderBy(allQ.col("Total Funds").desc()).show(false);
 
         // Terminal pause and clear
         sparkMenu.waitAndClear();
@@ -291,8 +294,8 @@ public class US_Spending_Queries {
     public static void listRecentlyAwardedFunds () throws Exception {
 
         // Query
-        sparkSession.sql("SELECT total_dollars_obligated AS Total Award, "
-                       + "recipient_name AS Group Awarded, action_date as Date Awarded FROM USA " +
+        sparkSession.sql("SELECT total_dollars_obligated AS Total_Award, "
+                       + "recipient_name AS Group_Awarded, action_date as Date_Awarded FROM USA " +
                          "ORDER BY action_date DESC;").show(20);
 
         // Force hang
