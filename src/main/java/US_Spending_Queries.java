@@ -249,6 +249,34 @@ public class US_Spending_Queries {
         sparkMenu.waitAndClear();
     } // ---------------------------------------------------------------------
 
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void listTotalQuarterlyReportsByAwardAmount()
+     * Purpose  -> Method which returns the total amount awarded and its
+     *             respective quarter
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
+    public static void listTotalQuarterlyReportsByAwardAmount() throws Exception {
+
+        // Query per quarter respectively
+        Dataset<Row> dfQ1 = df1.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(1)),
+                     dfQ2 = df2.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(2)),
+                     dfQ3 = df3.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(3)),
+                     dfQ4 = df4.select(functions.sum("total_dollars_obligated").as("Total Funds")).withColumn("Quarter", functions.lit(4));
+
+        // Combine all quarters via UNION
+        Dataset<Row> allQ = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        allQ.orderBy(MAX.col("Total Funds").desc()).show(false);
+
+        // Terminal pause and clear
+        sparkMenu.waitAndClear();
+} // ---------------------------------------------------------------------
+
     /* ---------------------------------------------------------------------- */
                             /* >>> Helper functions <<< */
     /* ---------------------------------------------------------------------- */
