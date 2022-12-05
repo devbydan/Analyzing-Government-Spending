@@ -175,14 +175,8 @@ public class SparkMainApp {
 
         while ((ent_choice = entityLkUp_input.nextInt()) != 0) {
             switch (ent_choice) {
-                case 0:
-                    return;
-                case 1:
-                    entityLookUp_QueryType(db, 1);
-                    break;
-                case 2:
-                    entityLookUp_QueryType(db, 2);
-                    break;
+                case 1: entityLookUp_QueryType(db, 1); break;
+                case 2: entityLookUp_QueryType(db, 2); break;
                 default:
                     System.out.println("Invalid Input");
                     break;
@@ -209,7 +203,31 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     public static void entityLookUp_QueryType(US_Spending_Queries db, int entType) throws Exception {
+        Scanner entityLkUp_input = new Scanner(System.in); // Grabs the input from the keyboard
+        String ent_choice = ""; // User choice from the terminal
 
+        clearScreen(); // Clears the screen
+        greeting();    // Title of the project
+
+        // inform user of lookup type
+        String noticeStr = "Looking for ";
+        if(entType == 1){ noticeStr += "giver"; }
+        else if(entType == 2){ noticeStr += "receiver"; }
+        System.out.println(noticeStr);
+
+        // print out options to find entity
+        System.out.println("Enter name or type 0 to return");
+
+        while (!(ent_choice = entityLkUp_input.nextLine()).equals("0")) {
+            if(db.tryFindEntityByName(entType, ent_choice)){
+                System.out.println("Found exact match!");
+                // TODO: lead to new menu
+                return; // for now
+            }
+            else{
+                System.out.println("\nEnter name or type 0 to return");
+            }
+        }
     }
 
 

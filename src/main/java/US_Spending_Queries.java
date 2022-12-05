@@ -54,7 +54,61 @@ public class US_Spending_Queries {
         sparkSession.sql("SELECT recipient_name AS recipient, SUM(total_dollars_obligated) AS total FROM USA GROUP BY recipient_name").show();
     }
 
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> tryFindEntityByName()
+     * Purpose  -> Using user input, see if entity exists, if not print related
+     * -----------------------------------------------------------------------
+     * Receives -> int entity type, string user input
+     * Returns  -> boolean found or not
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static boolean tryFindEntityByName(int enType, String usrIn) throws Exception{
+        usrIn = usrIn.toUpperCase(); // this is to fit formating, may as well do it automatically
+        String enTStr = "";
+        String enTInfStr = "";
+        // To expand add more cases
+        switch (enType){
+            case 1:
+                enTStr = "parent_award_agency_name";
+                enTInfStr = "Giver";
+                break;
+            case 2:
+                enTStr = "recipient_name";
+                enTInfStr = "Receiver";
+                break;
+            default:
+                System.out.println("\nIncorrect use of fucntion");
+                return false;
+        }
 
+        String queryBuilder = "SELECT DISTINCT " + enTStr + " AS " + enTInfStr + " FROM USA WHERE "
+                + enTStr + " = \'" + usrIn + '\'';
+//        System.out.print("Test: ");
+//        System.out.println(queryBuilder);
+
+        Dataset<Row> tempRes = sparkSession.sql(queryBuilder);
+        if(tempRes.isEmpty()){ // no exact match
+            // print close to
+            System.out.println("Could not find an exact match. Did you mean any of these?");
+            queryBuilder = "SELECT DISTINCT " + enTStr + " AS " + enTInfStr + " FROM USA WHERE "
+                    + enTStr + " LIKE \'%" + usrIn + "%\'";
+//            queryBuilder = "SELECT " + enTStr + " AS " + enTInfStr + " FROM USA"; // FOR DEBUG
+            sparkSession.sql(queryBuilder).show(false);
+            return false;
+        }
+        else{ // not sure if need 2 options but want to be safe
+            if(tempRes.count() == 1){ // found exact
+                return true;
+            }
+            else{ // some error
+                System.out.println("Some error");
+                tempRes.show(false);
+                return false;
+            }
+        }
+    }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Helper functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
