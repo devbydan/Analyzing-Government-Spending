@@ -9,11 +9,11 @@ import java.io.BufferedReader;
 import java.util.Scanner;
 
 public class US_Spending_Queries {
-    public static Dataset<Row> df; // TODO: fix temp public
+    public static Dataset<Row> df; // DataFrame instance
 
     private static SparkMainApp sparkMenu = new SparkMainApp(); // Used to call helper terminal-menu functions
-    private static SparkSession sparkSession;
-    private static Scanner input = new Scanner(System.in);
+    private static SparkSession sparkSession; // Spark instance
+    private static Scanner input = new Scanner(System.in); // Input reader/scanner
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -57,7 +57,7 @@ public class US_Spending_Queries {
         sparkSession.sql("SELECT recipient_name AS recipient, "
                        + "SUM(total_dollars_obligated) AS total "
                        + "FROM USA GROUP BY recipient_name").show();
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -74,7 +74,7 @@ public class US_Spending_Queries {
     public static void getNumOfAwardsPerEntity() throws Exception {
         sparkSession.sql("SELECT COUNT(*) AS num_of_awards "
                        + "FROM USA GROUP BY recipient_name").show();
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -105,7 +105,7 @@ public class US_Spending_Queries {
                        + "' GROUP BY start_date" +
                        + " ORDER BY total DESC;").show(1000, false);
 
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -276,6 +276,32 @@ public class US_Spending_Queries {
         // Terminal pause and clear
         sparkMenu.waitAndClear();
 } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void listRecentlyAwardedFunds ()
+     * Purpose  -> Method to list the recent awards in the USA.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
+    public static void listRecentlyAwardedFunds () throws Exception {
+
+        // Query
+        sparkSession.sql("SELECT total_dollars_obligated AS Total Award, "
+                       + "recipient_name AS Group Awarded, action_date as Date Awarded FROM USA " +
+                         "ORDER BY action_date DESC;").show(20);
+
+        // Force hang
+        TimeUnit.MILLISECONDS.sleep(500);
+
+        // Terminal pause and clear
+        sparkMenu.waitAndClear();
+
+    } // ---------------------------------------------------------------------
 
     /* ---------------------------------------------------------------------- */
                             /* >>> Helper functions <<< */
