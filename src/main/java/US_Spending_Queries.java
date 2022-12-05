@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class US_Spending_Queries {
     public static Dataset<Row> df; // TODO: fix temp public
+
+    private static SparkMainApp sma = new SparkMainApp(); // Used to call helper terminal-menu functions
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
 

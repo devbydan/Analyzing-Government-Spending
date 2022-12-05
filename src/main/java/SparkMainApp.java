@@ -27,6 +27,42 @@ public class SparkMainApp {
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
+     * Method   -> void waitUntilEnter()
+     * Purpose  -> Method which assists in pausing info printing for better
+     *             readability.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void waitUntilEnter() throws IOException {
+        System.out.print("Press Enter to Continue . . .\n\n");
+        int enter = System.in.read();
+        while(enter != 10){
+            enter = System.in.read();
+        }
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void waitAndClear()
+     * Purpose  -> Method which assists in user experience;
+     *             pausing info printing for better readability and
+     *             clearing the screen of the previously run query.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void waitAndClear() throws Exception {
+        waitUntilEnter();
+        clearScreen();
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
      * Method   -> void greeting()
      * Purpose  -> Method to print a greeting to the console menu.
      *             Purely aesthetic.
