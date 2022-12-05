@@ -4,7 +4,7 @@
 
 
 
-> This project of Analyzing Spending of Government Funds is a web-based application using Apache Spark. This application is used to check up-to-date, US government spending data with respect to location. We will use the data provided by the UF federal government through [USAspending.gov](https://www.USAspending.gov), an official government website which aggregates information on spending and makes it publicly accessible. The data set contains the amount of funds provided, their recipients, and other relevant identifiers for the transaction. We would also be using supplemental data sets in our search for correlation, determined as we progress through the project. The dataset can be found [here](https://www.usaspending.gov/search/?hash=2d95cc11cb5de7088fe3e4ac503bfdcc).
+> This project of Analyzing Spending of Government Funds is a web-based application using Apache Spark. This application is used to check up-to-date, US government spending data with respect to location. We will use the data provided by the US federal government through [USAspending.gov](https://www.USAspending.gov), an official government website which aggregates information on spending and makes it publicly accessible. The data set contains the amount of funds provided, their recipients, and other relevant identifiers for the transaction. We would also be using supplemental data sets in our search for correlation, determined as we progress through the project. The dataset can be found [here](https://www.usaspending.gov/search/?hash=2d95cc11cb5de7088fe3e4ac503bfdcc).
 >
 > 
 
@@ -15,32 +15,6 @@
 * Website: [LinkedIn](https://www.linkedin.com/in/devbydan/)
 * GitHub: [@devbydan](https://github.com/devbydan)
 
-
-
-## Background
-
-The federal government of the United States distributes money to programs intended to improve quality of life or to influence the economic health of the country. Suffice to say it is not easy to determine their effectiveness since it requires costly, lengthy, and intensive research. However, we have data on where the government is allocating funds and its intended purpose. Using this core data set in conjunction with data sets relevant to the aims of the programs, we can derive an estimation of their efficacy over time.
-
-
-## Motivation
-
-Our primary motivation is to provide clarity and transparency of government spending through analysis and visualization. The goal is to find intersections and correlations between spending and phenomena such as educational outcomes, research progress, political influence, natural disasters, and so on.
-
-## Problem Statement & Challenges
-
-One of the major challenges in this project is to find the suitable data which contains the refined information we are looking for rather than raw spending data. Another challenge is to find intersections and strong correlations between spending and [some] phenomena that may bear weight on said spending. In order to mitigate this, we need to carefully consider how we approach the problem with the proposed data set as there may be implicit bias or skews.
-
-While our spending data is consistent and fresh due to the government's high-velocty data stream, the rest of our data will likely become stale quickly. This is because we are relying on data from other works which perhaps were only performed once or are deprecated. We are also limited by team size; we cannot sustainably source, clean, and verify new data on any larger scale than what we have now.
-
-## Analytical Framework
-
-**<u>Front-End</u>**: Vue, Beast
-
-Vue.js is a JavaScript framework that extends the standard HTML and CSS for building a simple, user-friendly web interface. Given the complexities of our data, we want the user experience to be fundamentally simple. UCR's BEAST system extends the functionality of Spark; some of the added functionality allows the display of spatio-temporal and geo-spatial data analysis results. Thus, we will use it to generate portions of our visualizations as appropriate.
-
-**<u>Back-End</u>**: JavaScript, TypeScript, NodeJS, MongoDB, Beast
-
-JavaScript is a monopolized back-end language for websites as a majority of websites rely on its utility and flexibility. In conjunction with JavaScript, TypeScript will be used to add typing onto the languages' capability. NodeJS uses event-driven architecture that will solidify the foundation of our real-time web application. MongoDB has a NoSQL structure that is commonly paired with NodeJS and JavaScript, which will work well with our big-data requirements. In addition to this, UCR's BEAST system allows Spark to perform analysis and processing on spatio-temporal and geo-spatial data; we will use this in order to analyze portions of our data which are in region-based formats.
 
 ## Architecture & Implementation
 
