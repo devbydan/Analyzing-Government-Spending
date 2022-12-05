@@ -109,7 +109,12 @@ public class SparkMainApp {
         System.out.println("0. None, Go Back\n" +
                 "1. Get Total Amount Awarded by Group\n" +
                 "2. Get # of Awards Per Entity\n" +
-                "3. Get Total Award Amount By Date Range\n");
+                "3. Get Total Award Amount By Date Range\n"+
+                "4. Get Total Award Amount By Quarter\n"+
+                "5. Show Top 'K' Awarded Amounts Per Entity\n"+
+                "6. List Quarterly Reports\n"+
+                "7. Show List of Recent Events\n"+
+                "8. Look Up Entity\n");
 
     } // ---------------------------------------------------------------------
 
@@ -180,6 +185,11 @@ public class SparkMainApp {
                 case 1: db.getTotalAmountAwardedByGroup(); break;
                 case 2: db.getNumOfAwardsPerEntity(); break;
                 case 3: db.getTotalAwardAmountByDateRange(); break;
+                case 4: db.getAwardTotalByQuarterOfTheYear(); break;
+                case 5: db.topKAwardsByEntity(); break;
+                case 6: db.listTotalQuarterlyReportsByAwardAmount(); break;
+                case 7: db.listRecentlyAwardedFunds(); break;
+                case 8: db.tryFindEntityByName(); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project
