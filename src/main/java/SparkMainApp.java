@@ -53,7 +53,7 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     public static void choiceMenu(){
-        System.out.println("Please choose what you would like to do:\n" +
+        System.out.println("Please choose dataset:\n" +
                 "0. EXIT\n" +
                 "1. US Govt Spending\n");
         
@@ -72,7 +72,7 @@ public class SparkMainApp {
     public static void queryMenu(){
         System.out.println("0. None, Go Back\n" +
                 "1. Get Total Amount Awarded by Group\n" +
-                "2. Test Query Helper\n");
+                "7. Look Up Organization/ Entity\n");
 
     } // ---------------------------------------------------------------------
 
@@ -141,13 +141,77 @@ public class SparkMainApp {
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1: db.getTotalAmountAwardedByGroup(); break;
-                case 2: db.quarterHelper(); break; // TODO: remove eventually probably
+                case 7: entityLookUp(db); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project
             queryMenu(); // Prints the choice of queries
         }
     } // ---------------------------------------------------------------------
+
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> entityLookUp()
+     * Purpose  -> Method which provides 1st layer lookup interface for entities
+     *              determines what column to look in
+     * -----------------------------------------------------------------------
+     * Receives -> US_Spending_Queries type
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void entityLookUp(US_Spending_Queries db) throws Exception {
+        Scanner entityLkUp_input = new Scanner(System.in); // Grabs the input from the keyboard
+        int ent_choice; // User choice from the terminal
+
+        clearScreen(); // Clears the screen
+        greeting();    // Title of the project
+
+        // print out options to find entity
+        System.out.println("0. Return\n" +
+                "1. Search for funding GIVER\n" +
+                "2. Search for funding RECEVIER\n");
+
+        while ((ent_choice = entityLkUp_input.nextInt()) != 0) {
+            switch (ent_choice) {
+                case 0:
+                    return;
+                case 1:
+                    entityLookUp_QueryType(db, 1);
+                    break;
+                case 2:
+                    entityLookUp_QueryType(db, 2);
+                    break;
+                default:
+                    System.out.println("Invalid Input");
+                    break;
+            }
+            greeting();    // Title of the project
+
+            // print out options to find entity
+            System.out.println("0. Return\n" +
+                    "1. Search for funding GIVER\n" +
+                    "2. Search for funding RECEVIER\n");
+        }
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> entityLookUp_QueryType()
+     * Purpose  -> Method which provides user lookup interface for entities
+     *              level 2, type of query
+     * -----------------------------------------------------------------------
+     * Receives -> US_Spending_Queries type, integer indicating type giver 1
+     *              receiver 2
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void entityLookUp_QueryType(US_Spending_Queries db, int entType) throws Exception {
+
+    }
+
 
     /* MAIN TEST HARNESS */
     public static void main(String[] args) throws Exception {

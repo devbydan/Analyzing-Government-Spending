@@ -54,7 +54,9 @@ public class US_Spending_Queries {
         sparkSession.sql("SELECT recipient_name AS recipient, SUM(total_dollars_obligated) AS total FROM USA GROUP BY recipient_name").show();
     }
 
-    /* >>> Helper functions <<< */
+
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Helper functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
