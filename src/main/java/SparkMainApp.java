@@ -72,7 +72,8 @@ public class SparkMainApp {
     public static void queryMenu(){
         System.out.println("0. None, Go Back\n" +
                 "1. Get Total Amount Awarded by Group\n" +
-                "2. Get # of Awards Per Entity\n");
+                "2. Get # of Awards Per Entity\n" +
+                "3. Get Total Award Amount By Date Range\n");
 
     } // ---------------------------------------------------------------------
 
@@ -142,6 +143,7 @@ public class SparkMainApp {
             switch (choice) {
                 case 1: db.getTotalAmountAwardedByGroup(); break;
                 case 2: db.getNumOfAwardsPerEntity(); break;
+                case 3: db.getTotalAwardAmountByDateRange(); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project

@@ -52,7 +52,9 @@ public class US_Spending_Queries {
      */
     /* /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// */
     public static void getTotalAmountAwardedByGroup() throws Exception {
-        sparkSession.sql("SELECT recipient_name AS recipient, SUM(total_dollars_obligated) AS total FROM USA GROUP BY recipient_name").show();
+        sparkSession.sql("SELECT recipient_name AS recipient, "
+                       + "SUM(total_dollars_obligated) AS total "
+                       + "FROM USA GROUP BY recipient_name").show();
     }
 
     /*
@@ -68,7 +70,39 @@ public class US_Spending_Queries {
      */
     /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
     public static void getNumOfAwardsPerEntity() throws Exception {
-        sparkSession.sql("SELECT COUNT(*) AS num_of_awards FROM USA GROUP BY recipient_name").show();
+        sparkSession.sql("SELECT COUNT(*) AS num_of_awards "
+                       + "FROM USA GROUP BY recipient_name").show();
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> getTotalAwardAmountByDateRange()
+     * Purpose  -> Method which returns the total award amount within a
+     *             specified date range
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> int, date
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
+    public static void getTotalAwardAmountByDateRange() throws Exception {
+
+        // Keyboard reader
+        Scanner input = new Scanner(System.in);
+
+        // Prompt user for date range
+        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter an ending date (YYYY-MM-DD): ");
+        String endDate = input.nextLine();
+
+        // Query
+        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total, start_date" +
+                       + " FROM USA WHERE '" + startDate + "' <= start_date AND end_date <= '" + endDate
+                       + "' GROUP BY start_date" +
+                       + " ORDER BY total DESC;").show(1000, false);
+
     }
 
     /* ---------------------------------------------------------------------- */
