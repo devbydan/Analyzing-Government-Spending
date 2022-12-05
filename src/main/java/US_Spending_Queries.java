@@ -9,7 +9,7 @@ import java.io.BufferedReader;
 import java.util.Scanner;
 
 public class US_Spending_Queries {
-    private static Dataset<Row> df;
+    public static Dataset<Row> df; // TODO: fix temp public
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
 
@@ -91,8 +91,10 @@ public class US_Spending_Queries {
      * Returns  -> first quarter data
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    private static Dataset<Row> quarterOne() throws Exception {
-        sparkSession.sql("SELECT * FROM USA WHERE '2022-01-01' <= date AND '2022-03-31' >= date ORDER BY date;");
+    private static Dataset<Row> quarterOne() throws Exception { // TODO: Fix query, no 'date' col
+        Dataset<Row> temp = sparkSession.sql("SELECT * FROM USA WHERE '2022-01-01' <= action_date AND '2022-03-31' >= action_date ORDER BY action_date;");
+//        temp.show();
+        return temp;
     }
 
     /*
@@ -105,8 +107,10 @@ public class US_Spending_Queries {
      * Returns  -> second quarter data
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    private static Dataset<Row> quarterTwo() throws Exception {
-        sparkSession.sql("SELECT * FROM USA WHERE '2022-04-01' <= date AND '2022-06-30' >= date ORDER BY date;");
+    private static Dataset<Row> quarterTwo() throws Exception { // TODO: Fix query, no 'date' col
+        Dataset<Row> temp = sparkSession.sql("SELECT * FROM USA WHERE '2022-04-01' <= action_date AND '2022-06-30' >= action_date ORDER BY action_date;");
+//        temp.show();
+        return temp;
     }
 
     /*
@@ -119,8 +123,10 @@ public class US_Spending_Queries {
      * Returns  -> third quarter data
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    private static Dataset<Row> quarterThree() throws Exception {
-        sparkSession.sql("SELECT * FROM USA WHERE '2022-07-01' <= date AND '2022-09-31' >= date ORDER BY date;");
+    private static Dataset<Row> quarterThree() throws Exception { // TODO: Fix query, no 'date' col
+        Dataset<Row> temp = sparkSession.sql("SELECT * FROM USA WHERE '2022-07-01' <= action_date AND '2022-09-31' >= action_date ORDER BY action_date;");
+//        temp.show();
+        return temp;
     }
 
     /*
@@ -133,8 +139,10 @@ public class US_Spending_Queries {
      * Returns  -> fourth quarter data
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    private static Dataset<Row> quarterFour() throws Exception {
-        sparkSession.sql("SELECT * FROM USA WHERE '2022-10-01' <= date AND '2022-12-31' >= date ORDER BY date;");
+    private static Dataset<Row> quarterFour() throws Exception { // TODO: Fix query, no 'date' col
+        Dataset<Row> temp = sparkSession.sql("SELECT * FROM USA WHERE '2022-10-01' <= action_date AND '2022-12-31' >= action_date ORDER BY action_date;");
+//        temp.show();
+        return temp;
     }
 
     /*
@@ -147,7 +155,7 @@ public class US_Spending_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    private static void quarterHelper() throws Exception {
+    public static void quarterHelper() throws Exception { // TODO: fix temporarily public
         Dataset<Row> df1 = quarterOne(),
                      df2 = quarterTwo(),
                      df3 = quarterThree(),

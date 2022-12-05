@@ -71,7 +71,8 @@ public class SparkMainApp {
      */
     public static void queryMenu(){
         System.out.println("0. None, Go Back\n" +
-                "1. Get Total Amount Awarded by Group\n");
+                "1. Get Total Amount Awarded by Group\n" +
+                "2. Test Query Helper\n");
 
     } // ---------------------------------------------------------------------
 
@@ -125,6 +126,10 @@ public class SparkMainApp {
      */
     public static void queryUSSpending(SparkSession sparkSession) throws Exception {
         US_Spending_Queries db = new US_Spending_Queries("hdfs://localhost:9000/US-Spending/Contracts_PrimeTransactions_2022-11-23_H17M10S30_1.csv", sparkSession); // Grabs the file from dir
+//        // For Testing
+//        System.out.println("\nHere is what I loaded");
+//        db.df.printSchema();
+//        System.out.println("\n");
         Scanner input = new Scanner(System.in); // Grabs the input from the keyboard
         int choice; // User choice from the terminal
 
@@ -136,6 +141,7 @@ public class SparkMainApp {
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1: db.getTotalAmountAwardedByGroup(); break;
+                case 2: db.quarterHelper(); break; // TODO: remove eventually probably
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project
