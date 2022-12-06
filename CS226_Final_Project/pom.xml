@@ -67,6 +67,11 @@
       <version>${spec2.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-mllib_${scala.compat.version}</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -79,7 +84,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>jstut001.App</mainClass>
+              <mainClass>jstut001.DataPrep</mainClass>
             </manifest>
           </archive>
         </configuration>
