@@ -374,7 +374,6 @@ public class US_Spending_Queries {
      */
     public static void awardGiverInfo(String entName){
         sparkSession.sql("SELECT DISTINCT awarding_agency_name AS Agency_Name," +
-                " awarding_agency_code AS Agency_Code," +
                 " awarding_office_name AS Office_Name" +
                 " FROM USA WHERE awarding_agency_name = \'" + entName + "\'").show(false);
     }

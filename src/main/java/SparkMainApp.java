@@ -217,7 +217,7 @@ public class SparkMainApp {
         // print out options to find entity
         System.out.println("0. Return\n" +
                 "1. Search for Awarding Agency\n" +
-                "2. Search for Award RECIPIENT\n");
+                "2. Search for Award Recipient\n");
 
         while ((ent_choice = entityLkUp_input.nextInt()) != 0) {
             switch (ent_choice) {
@@ -232,7 +232,7 @@ public class SparkMainApp {
             // print out options to find entity
             System.out.println("0. Return\n" +
                     "1. Search for Awarding Agency\n" +
-                    "2. Search for Award RECIPIENT\n");;
+                    "2. Search for Award Recipient\n");;
         }
     } // ---------------------------------------------------------------------
 
