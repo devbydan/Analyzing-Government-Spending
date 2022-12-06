@@ -73,7 +73,7 @@ public class US_Spending_Queries {
      */
     /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
     public static void getNumOfAwardsPerEntity() throws Exception {
-        sparkSession.sql("SELECT COUNT(*) AS num_of_awards "
+        sparkSession.sql("SELECT recipient_name, COUNT(*) AS num_of_awards "
                        + "FROM USA GROUP BY recipient_name").show(false);
     } // ---------------------------------------------------------------------
 
