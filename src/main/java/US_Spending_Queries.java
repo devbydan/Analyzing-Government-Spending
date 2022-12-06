@@ -318,18 +318,17 @@ public class US_Spending_Queries {
      */
     /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
     public static boolean tryFindEntityByName(int enType, String usrIn) throws Exception{
-        usrIn = usrIn.toUpperCase(); // this is to fit formating, may as well do it automatically
         String enTStr = "";
         String enTInfStr = "";
         // To expand add more cases
         switch (enType){
             case 1:
-                enTStr = "parent_award_agency_name";
-                enTInfStr = "Giver";
+                enTStr = "awarding_agency_name"; // different than parent_award_agency_name
+                enTInfStr = "Awarding_Agency";
                 break;
             case 2:
-                enTStr = "recipient_name";
-                enTInfStr = "Receiver";
+                enTStr = "recipient_name"; // returns the same thing as recipient_parent_name ig? maybe verify with query
+                enTInfStr = "Recipient";
                 break;
             default:
                 System.out.println("\nIncorrect use of fucntion");
@@ -361,6 +360,124 @@ public class US_Spending_Queries {
                 return false;
             }
         }
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> awardGiverInfo
+     * Purpose  -> retrieve info on agency providing awards
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void awardGiverInfo(String entName){
+        sparkSession.sql("SELECT DISTINCT awarding_agency_name AS Agency_Name," +
+                " awarding_agency_code AS Agency_Code," +
+                " awarding_office_name AS Office_Name" +
+                " FROM USA WHERE awarding_agency_name = \'" + entName + "\'").show(false);
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> awardGiverTotalMoney
+     * Purpose  -> retrieve total money agency has awarded
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void awardGiverTotalMoney(String entName){
+        sparkSession.sql("SELECT SUM(current_total_value_of_award) AS Total_Money_Awarded " +
+                "FROM USA WHERE awarding_agency_name = \'" + entName + "\'").show(false);
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> awardGiverTransactions
+     * Purpose  -> retrieve information on times awards have been given
+     *              by this entity
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void awardGiverTransactions(String entName){
+        sparkSession.sql("SELECT contract_transaction_unique_key AS Unique_ID," +
+                " recipient_name AS Recipient, current_total_value_of_award as Current_Total, " +
+                "award_type as Award_Type, action_date AS Action_Date " +
+                "FROM USA WHERE awarding_agency_name = \'" + entName + "\'").show(false);
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> recipientInfo
+     * Purpose  -> retrieve information on award recipient
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void recipientInfo(String entName){
+        sparkSession.sql("SELECT DISTINCT recipient_name, recipient_uei, recipient_duns, recipient_parent_name, recipient_parent_uei" +
+                ", recipient_parent_duns FROM USA WHERE recipient_name = \'" + entName + "\'").show(false);
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> recipientAKA
+     * Purpose  -> return aliases for recipient
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+
+    public static void recipientAKA(String entName){
+        sparkSession.sql("SELECT DISTINCT recipient_doing_business_as_name AS Also_Known_As " +
+                "FROM USA WHERE recipient_name = \'" + entName + "\'").show(false);
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> recipientLoc
+     * Purpose  -> retrieve locations where recipient has stated they are
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+
+    public static void recipientLoc(String entName){
+        sparkSession.sql("SELECT DISTINCT recipient_country_name AS Country, recipient_address_line_1 AS Address1, " +
+                "recipient_address_line_2 AS Address2, recipient_city_name AS City, recipient_county_name AS County, " +
+                "recipient_state_name AS State, recipient_zip_4_code AS ZIP " +
+                "FROM USA WHERE recipient_name = \'" + entName + "\'").show(false);
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> recipientPReg
+     * Purpose  -> IMPORTANT, return areas where money recived is projected
+     *              to have an impact
+     * -----------------------------------------------------------------------
+     * Receives -> string entity name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void recipientPReg(String entName){
+        sparkSession.sql("SELECT DISTINCT primary_place_of_performance_country_name AS Country, " +
+                "primary_place_of_performance_city_name AS City, " + "primary_place_of_performance_county_name As County, " + 
+                "primary_place_of_performance_state_name AS State, primary_place_of_performance_zip_4 AS ZIP," +
+                "primary_place_of_performance_congressional_district AS Congr_Distr " +
+                "FROM USA WHERE recipient_name = \'" + entName + "\'").show(false);
     }
 
     /* ---------------------------------------------------------------------- */

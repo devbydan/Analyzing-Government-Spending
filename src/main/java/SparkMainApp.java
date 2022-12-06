@@ -106,7 +106,7 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     public static void queryMenu(){
-        System.out.println("0. None, Go Back\n" +
+        System.out.println("0. Return\n" +
                 "1. Get Total Amount Awarded by Group\n" +
                 "2. Get # of Awards Per Entity\n" +
                 "3. Get Total Award Amount By Date Range\n"+
@@ -216,8 +216,8 @@ public class SparkMainApp {
 
         // print out options to find entity
         System.out.println("0. Return\n" +
-                "1. Search for funding GIVER\n" +
-                "2. Search for funding RECEVIER\n");
+                "1. Search for Awarding Agency\n" +
+                "2. Search for Award RECIPIENT\n");
 
         while ((ent_choice = entityLkUp_input.nextInt()) != 0) {
             switch (ent_choice) {
@@ -231,8 +231,8 @@ public class SparkMainApp {
 
             // print out options to find entity
             System.out.println("0. Return\n" +
-                    "1. Search for funding GIVER\n" +
-                    "2. Search for funding RECEVIER\n");
+                    "1. Search for Awarding Agency\n" +
+                    "2. Search for Award RECIPIENT\n");;
         }
     } // ---------------------------------------------------------------------
 
@@ -257,18 +257,19 @@ public class SparkMainApp {
 
         // inform user of lookup type
         String noticeStr = "Looking for ";
-        if(entType == 1){ noticeStr += "giver"; }
-        else if(entType == 2){ noticeStr += "receiver"; }
+        if(entType == 1){ noticeStr += "awarding agency"; }
+        else if(entType == 2){ noticeStr += "award recipient"; }
         System.out.println(noticeStr);
 
         // print out options to find entity
         System.out.println("Enter name or type 0 to return");
 
         while (!(ent_choice = entityLkUp_input.nextLine()).equals("0")) {
+            ent_choice = ent_choice.toUpperCase(); // this is to fit formating, may as well do it automatically
             if(db.tryFindEntityByName(entType, ent_choice)){
                 System.out.println("Found exact match!");
-                // TODO: lead to new menu
-                return; // for now
+                menuForEntity(db, entType, ent_choice);
+                return;
             }
             else{
                 System.out.println("\nEnter name or type 0 to return");
@@ -276,6 +277,89 @@ public class SparkMainApp {
         }
     } // ---------------------------------------------------------------------
 
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Ivann De la Cruz
+     * Method   -> menuForEntity()
+     * Purpose  -> interface for queries after user has found entity
+     * -----------------------------------------------------------------------
+     * Receives -> US_Spending_Queries type, integer indicating type, resolved name
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void menuForEntity(US_Spending_Queries db, int enType, String entName){
+        Scanner entMenu_input = new Scanner(System.in); // Grabs the input from the keyboard
+        int entMenu_choice; // User choice from the terminal
+        System.out.print("What would you like to do with " + entName + " ?");
+
+        switch (enType){
+            case 1: // awarding_agency_name
+                // make any updates below too
+                System.out.println("\n0. Return" +
+                                    "\n1. Info" + // print out anything that is related to awarding agency name
+                                    "\n2. Total Money Given" + // print out sum of current_total_value_of_award
+                                    "\n3. Transactions"); // print transaction id, recipient, money, idk what else
+                while((entMenu_choice = entMenu_input.nextInt()) != 0) {
+                    switch (entMenu_choice) {
+                        case 0:
+                            return; // go back a level
+                        case 1:
+                            db.awardGiverInfo(entName);
+                            break;
+                        case 2:
+                            db.awardGiverTotalMoney(entName);
+                            break;
+                        case 3:
+                            db.awardGiverTransactions(entName);
+                            break;
+                        default:
+                            System.out.println("Invalid input");
+                            return;
+                    }// End of choice switch statement ---
+                    // make any updates above too
+                    System.out.println("\n0. Return" +
+                            "\n1. Info" + // print out anything that is related to awarding agency name
+                            "\n2. Total Money Given" + // print out sum of current_total_value_of_award
+                            "\n3. Transactions"); // print transaction id, recipient, money, idk what else
+                }
+                break;
+            case 2: // recipient_name;
+                // make changes below too
+                System.out.println("\n0. Return" +
+                                    "\n1. Info" +
+                                    "\n2. Also Known As" +
+                                    "\n3. Recipient Locations" +
+                                    "\n4. Primary Regions Affected");
+                while((entMenu_choice = entMenu_input.nextInt()) != 0) {
+                    switch (entMenu_choice) {
+                        case 0:
+                            return; // go back a level
+                        case 1:
+                            db.recipientInfo(entName);
+                            break;
+                        case 2:
+                            db.recipientAKA(entName);
+                            break;
+                        case 3:
+                            db.recipientLoc(entName);
+                            break;
+                        default:
+                            db.recipientPReg(entName);
+                            break;
+                    }// End of choice switch statement ---
+                    // make changes above too
+                    System.out.println("\n0. Return" +
+                            "\n1. Info" +
+                            "\n2. Also Known As" +
+                            "\n3. Recipient Locations" +
+                            "\n4. Primary Regions Affected");
+                }
+                break;
+            default:
+                System.out.print("Error: menu was passed improper ent type");
+                return;
+        }
+    }
 
 
     /* MAIN TEST HARNESS */
