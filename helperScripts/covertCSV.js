@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-csv = fs.readFileSync('cpas.csv');
+csv = fs.readFileSync('/Users/brooke/big_data/LocationsMap.csv');
 
 
 
@@ -39,7 +39,7 @@ for (let i = 1; i < array.length - 1; i++) {
 }
 
 let json = JSON.stringify(result);
-fs.writeFileSync('cpas.json', json);
+fs.writeFileSync('data/Locations.json', json);
 console.log("file written sucessfully")
 
 

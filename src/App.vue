@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="footer">
-    <h4>Front-end by Brooke Godinez</h4>
+    <h4>Front-end by Brooke Godinez and Rucha Kolhatkar</h4>
   </div>
 </template>
 
@@ -35,8 +35,9 @@ import { onMounted } from "vue";
 
 import json from '../data/gz_2010_us_050_00_5m.json';
 import countyAndAward from '../data/CountyAndAward.json';
-import stateAndAward from '../data/AwardByState.json';
-import stateHash from '../data/states_titlecase.json'
+// import stateAndAward from '../data/AwardByState.json';
+
+import points from '../data/GEOLocations.json'
 
 
 export default {
@@ -53,6 +54,10 @@ export default {
       mapboxgl.accessToken =
         "pk.eyJ1IjoiYnJvb2tlZ29kaW5leiIsImEiOiJjbGI0bHNxZHEwMG15M3BvNmlkaXZjbTViIn0.BVhJ6Jdb8bEBOJQd_WJtfQ";
       const bounds = [[-175.812867, 4.217278], [-6.279377, 64.1494853]];
+
+
+
+
       const map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/light-v11",
@@ -78,7 +83,7 @@ export default {
           'source': 'states',
           'layout': {},
           'paint': {
-            'fill-color': '#34ace3',
+            'fill-color': '#0d324d',
             'fill-opacity': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
@@ -93,7 +98,7 @@ export default {
 
           'layout': {},
           'paint': {
-            'line-color': '#627BC1',
+            'line-color': '#0d324d',
             'line-width': 1
           }
         });
@@ -112,8 +117,8 @@ export default {
             }
 
             
-            const description = countyAndAward.filter(item => item.county == e.features[0].properties.NAME);
-            // const description
+            const description = countyAndAward.filter(item => item.county.toLowerCase() == e.features[0].properties.NAME.toLowerCase());
+            
             const coordinates = e.lngLat;
             popup.setLngLat(coordinates).setHTML(description[0].award).addTo(map);
 
@@ -148,6 +153,7 @@ export default {
         maxBounds: bounds
       });
       const zoomThreshold = 4;
+
       choroplethMap.dragRotate.disable();
       choroplethMap.touchZoomRotate.disableRotation();
 
@@ -163,12 +169,15 @@ export default {
           "data": "https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson",
           'generateId': true
         });
-        const matchExpression = ['match', ['get', 'state']]
-        for (const row in stateAndAward){
-          const red = (row.totalStateAward/100000000) * 255;
-          const color = `rgb(${red}, 0, 0)`;
-          matchExpression.push(row.state, color);
-        }
+        
+      
+        choroplethMap.addSource('points', {
+          'type': 'geojson',
+          'data': points,
+          'generateId': true
+        });
+        
+
 
         choroplethMap.addLayer(
           {
@@ -179,8 +188,8 @@ export default {
             'type': 'line',
             'layout': {},
             'paint': {
-              'line-color': '#FF0000',
-              'line-width': 2,
+              'line-color': '#0d324d',
+              'line-width': 1,
             }
           });
 
@@ -193,18 +202,18 @@ export default {
             'type': 'line',
             'layout': {},
             'paint': {
-              'line-color': '#FF0000',
-              'line-width': 2
+              'line-color': '#0d324d',
+              'line-width': 1
             }
 
-          });
-          choroplethMap.addLayer({
+           });
+        choroplethMap.addLayer({
           'id': 'state-fills',
           'type': 'fill',
           'source': 'states',
           'layout': {},
           'paint': {
-            'fill-color': '#34ace3',
+            'fill-color': '#0d324d',
             'fill-opacity': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
@@ -212,47 +221,42 @@ export default {
               0.5]
           }
         });
-
-        const popup2 = new mapboxgl.Popup({
-          closeButton: false,
-          closeOnClick: false
-        })
         
-        choroplethMap.on('mousemove', 'state-fills', (e) => {
-          if (e.features.length > 0) {
-            if (hoveredStateId !== null) {
-              choroplethMap.setFeatureState(
-                { source: 'state_outline', id: hoveredStateId },
-                { hover: false }
-              );
-            }
-
-            
-            const tempDescription = stateHash.filter(item => item.name == e.features[0].properties.STATE_NAME);
-            // const description
-            const description = stateAndAward.filter(item => item.state == tempDescription.name);
-            const coordinates = e.lngLat;
-            popup2.setLngLat(coordinates).setHTML(description.award).addTo(map);
-
-
-
-            hoveredStateId = e.features[0].id;
-            choroplethMap.setFeatureState(
-              { source: 'state_outline', id: hoveredStateId },
-              { hover: true }
-            );
+        choroplethMap.addLayer({
+          id: 'points',
+          type: 'circle',
+          source: 'points', 
+          paint: {
+            'circle-radius': 5,
+            'circle-color': '#0d324d'
           }
         });
-        choroplethMap.on('mouseleave', 'state-fills', () => {
-          if (hoveredStateId !== null) {
-            choroplethMap.setFeatureState(
-              { source: 'state_outline', id: hoveredStateId },
-              { hover: false }
-            );
-          }
-          hoveredStateId = null;
-          popup2.remove();
+        choroplethMap.on('click', 'points', (e) => {
+        // Copy coordinates array.
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const description = e.features[0].properties.name;
+        
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        
+        new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(description)
+        .addTo(choroplethMap);
         });
+        choroplethMap.on('mouseenter', 'points', () => {
+        choroplethMap.getCanvas().style.cursor = 'pointer';
+        });
+        
+        // Change it back to a pointer when it leaves.
+        choroplethMap.on('mouseleave', 'points', () => {
+        choroplethMap.getCanvas().style.cursor = '';
+});
+
 
       });
       return {};

@@ -1,8 +1,8 @@
 
 const fs = require("fs");
 
-let rawZip = fs.readFileSync('USCities.json');
-let rawBigData = fs.readFileSync('cpas.json');
+let rawZip = fs.readFileSync('data/USCities.json');
+let rawBigData = fs.readFileSync('data/cpas.json');
 
 let zipCodes = JSON.parse(rawZip);
 let bigData = JSON.parse(rawBigData);
@@ -17,11 +17,18 @@ for (let i = 0; i < zipCodes.length; i++){
     for (let j = 0; j < bigData.length; j++){
         let obj2 = bigData[j];
         
-        if (obj.zip_code == obj2.recipient_zip_4_code.slice(0, -4)){
+        const tempStr = obj2.recipient_zip_4_code.slice(0, 5);
+        // if (obj.zip_code == parseInt(tempStr)){
             
-            totalAward += parseFloat(obj2.total_obligated_amount);
+        //     totalAward += parseFloat(obj2.total_obligated_amount);
            
-        }
+        // }
+        const newObj = zipCodes.filter(item => item.state == tempStr);
+        let totalSum = newObj.reduce(function (result, item){
+            return result + item.award;
+           }, 0);
+        totalAward += totalSum;
+
     }
     obj.award = totalAward
 
@@ -29,7 +36,7 @@ for (let i = 0; i < zipCodes.length; i++){
 
 let jsonContent = JSON.stringify(zipCodes);
 
-// fs.writeFileSync('CountyAndAward.json', jsonContent);
+fs.writeFileSync('CountyAndAward2.json', jsonContent);
 
 let newJSON = [];
 const states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 
@@ -52,4 +59,4 @@ for (let i = 0; i < states.length; i++)
 
 let newJsonFile = JSON.stringify(newJSON);
 
-fs.writeFileSync('AwardByState.json', newJsonFile);
+// fs.writeFileSync('AwardByState.json', newJsonFile);
