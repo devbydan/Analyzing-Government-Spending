@@ -107,14 +107,15 @@ public class SparkMainApp {
      */
     public static void queryMenu(){
         System.out.println("0. Return\n" +
-                "1. Get Total Amount Awarded by Group\n" +
-                "2. Get # of Awards Per Entity\n" +
-                "3. Get Total Award Amount By Date Range\n"+
-                "4. Get Total Award Amount By Quarter\n"+
-                "5. Show Top 'K' Awarded Amounts Per Entity\n"+
-                "6. List Quarterly Reports\n"+
-                "7. Show List of Recent Events\n"+
-                "8. Look Up Entity\n");
+                "1.  Get Total Amount Awarded by Group\n" +
+                "2.  Get # of Awards Per Entity\n" +
+                "3.  Get Total Award Amount By Date Range\n"+
+                "4.  Get Total Award Amount By Quarter\n"+
+                "5.  Show Top 'K' Awarded Amounts Per Entity\n"+
+                "6.  List Quarterly Reports\n"+
+                "7.  Show List of Recent Events\n"+
+                "8.  Look Up Entity\n" +
+                "9.  Correlation Analysis\n");
 
     } // ---------------------------------------------------------------------
 
@@ -141,8 +142,7 @@ public class SparkMainApp {
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1:
-                    System.out.println("\nAccessing US Spending Database...\n");
-                    System.out.println("Please wait while the data is pre-processed...\n\n");
+                    System.out.println("Please wait while the data is pre-processed...\n");
                     queryUSSpending(sparkSession);
                     break;
                 default:
@@ -167,7 +167,10 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     public static void queryUSSpending(SparkSession sparkSession) throws Exception {
-        US_Spending_Queries db = new US_Spending_Queries("hdfs://localhost:9000/US-Spending/Contracts_PrimeTransactions_2022-11-23_H17M10S30_1.csv", sparkSession); // Grabs the file from dir
+        US_Spending_Queries db = new US_Spending_Queries("hdfs://localhost:9000/US-Spending/Contracts_PrimeTransactions_2022-11-23_H17M10S30_1.csv",
+                "hdfs://localhost:9000/US-Spending/us_disaster_declarations.csv",
+                sparkSession); // Grabs the file from dir
+
 //        // For Testing
 //        System.out.println("\nHere is what I loaded");
 //        db.df.printSchema();
@@ -190,6 +193,8 @@ public class SparkMainApp {
                 case 6: db.listTotalQuarterlyReportsByAwardAmount(); break;
                 case 7: db.listRecentlyAwardedFunds(); break;
                 case 8: entityLookUp(db); break;
+                case 9: correlationMenu(db); break;
+//                case 10: db.summarizeData(); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();  // Title of the project
@@ -343,8 +348,11 @@ public class SparkMainApp {
                         case 3:
                             db.recipientLoc(entName);
                             break;
-                        default:
+                        case 4:
                             db.recipientPReg(entName);
+                            break;
+                        default:
+                            System.out.println("Unrecognized input, try again.");
                             break;
                     }// End of choice switch statement ---
                     // make changes above too
@@ -358,6 +366,30 @@ public class SparkMainApp {
             default:
                 System.out.print("Error: menu was passed improper ent type");
                 return;
+        }
+    }
+    
+    public static void correlationMenu(US_Spending_Queries db){
+        Scanner corrMenu_input = new Scanner(System.in); // Grabs the input from the keyboard
+        int corrMenu_choice; // User choice from the terminal
+        
+        System.out.println("Select Data Set to Perform Correlation Analysis");
+        System.out.println("\n0. Return" +
+                            "\n1. USA Disasters");
+        while((corrMenu_choice = corrMenu_input.nextInt()) != 0) {
+            switch (corrMenu_choice) {
+                case 0:
+                    return; // go back a level
+                case 1:
+                    db.disasterCorr();
+                    break;
+                default:
+                    System.out.println("Unrecognized input, try again.");
+                    break;
+            }// End of choice switch statement ---
+            // make changes above too
+            System.out.println("\n0. Return" +
+                    "\n1. USA Disasters");
         }
     }
 
