@@ -106,7 +106,7 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     public static void queryMenu(){
-        System.out.println("0. Return\n" +
+        System.out.println("0.  Return\n" +
                 "1.  Get Total Amount Awarded by Group\n" +
                 "2.  Get # of Awards Per Entity\n" +
                 "3.  Get Total Award Amount By Date Range\n"+

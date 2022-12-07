@@ -118,9 +118,9 @@ public class US_Spending_Queries {
         String endDate = input.nextLine();
 
         // Query
-        sparkSession.sql("SELECT recipient_name, SUM(total_dollars_obligated) AS total, period_of_performance_start_date AS date"
-                        + " FROM USA WHERE '" + startDate + "' <= period_of_performance_start_date AND period_of_performance_current_end_date <= '" + endDate
-                        + "' GROUP BY date"
+        sparkSession.sql("SELECT U.recipient_name, SUM(U.total_dollars_obligated) AS total "
+                        + " FROM USA AS U WHERE '" + startDate + "' <= U.period_of_performance_start_date AND U.period_of_performance_current_end_date <= '" + endDate
+                        + "' GROUP BY recipient_name"
                         + " ORDER BY total DESC;").show(1000, false);
 
     } // ---------------------------------------------------------------------
