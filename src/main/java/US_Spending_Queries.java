@@ -90,7 +90,7 @@ public class US_Spending_Queries {
      */
     /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
     public static void getNumOfAwardsPerEntity() throws Exception {
-        sparkSession.sql("SELECT COUNT(*) AS num_of_awards "
+        sparkSession.sql("SELECT recipient_name, COUNT(*) AS num_of_awards "
                        + "FROM USA GROUP BY recipient_name").show(false);
     } // ---------------------------------------------------------------------
 
@@ -118,9 +118,9 @@ public class US_Spending_Queries {
         String endDate = input.nextLine();
 
         // Query
-        sparkSession.sql("SELECT SUM(total_dollars_obligated) AS total, period_of_performance_start_date"
+        sparkSession.sql("SELECT recipient_name, SUM(total_dollars_obligated) AS total, period_of_performance_start_date AS date"
                         + " FROM USA WHERE '" + startDate + "' <= period_of_performance_start_date AND period_of_performance_current_end_date <= '" + endDate
-                        + "' GROUP BY period_of_performance_start_date"
+                        + "' GROUP BY date"
                         + " ORDER BY total DESC;").show(1000, false);
 
     } // ---------------------------------------------------------------------
@@ -391,7 +391,6 @@ public class US_Spending_Queries {
      */
     public static void awardGiverInfo(String entName){
         sparkSession.sql("SELECT DISTINCT awarding_agency_name AS Agency_Name," +
-                " awarding_agency_code AS Agency_Code," +
                 " awarding_office_name AS Office_Name" +
                 " FROM USA WHERE awarding_agency_name = \'" + entName + "\'").show(false);
     }
