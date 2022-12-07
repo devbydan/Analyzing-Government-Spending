@@ -1,16 +1,25 @@
 package SparkWorks; // Enveloped package
 
 //Apache Spark Libraries
+import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.Row;
+import org.apache.spark.ml.stat.Correlation;
+import org.apache.spark.ml.linalg.Vectors;
+import org.apache.spark.ml.linalg.VectorUDT;
+import org.apache.spark.sql.types.*;
 
 //Java Includes
 import java.io.*;
 import java.io.BufferedReader;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 public class US_Spending_Queries {
     public static Dataset<Row> df; // DataFrame instance
+    public static Dataset<Row> disasterDataFrame;
 
     private static SparkMainApp sparkMenu = new SparkMainApp(); // Used to call helper terminal-menu functions
     private static SparkSession sparkSession; // Spark instance
@@ -28,17 +37,25 @@ public class US_Spending_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    US_Spending_Queries(String filePath, SparkSession sparkSession)
+    US_Spending_Queries(String filePathSpending, String filePathDisaster, SparkSession sparkSession)
     {
         this.sparkSession = sparkSession;
+        System.out.println("Accessing US Spending Database...\n");
         this.df = sparkSession
                 .read()
                 .format("csv")
                 .option("header", "true")
                 .option("inferSchema", "true")
-                .load(filePath);
-
+                .load(filePathSpending);
         df.createOrReplaceTempView("USA");
+        System.out.println("Loading US Disaster Data...\n");
+        this.disasterDataFrame = sparkSession
+                .read()
+                .format("csv")
+                .option("header", "true")
+                .option("inferSchema", "true")
+                .load(filePathDisaster);
+        disasterDataFrame.createOrReplaceTempView("DSTR");
     } // ---------------------------------------------------------------------
 
 
@@ -480,6 +497,73 @@ public class US_Spending_Queries {
                 "FROM USA WHERE recipient_name = \'" + entName + "\'").show(false);
     }
 
+    public static void disasterCorr(){
+        Scanner disCorr_input = new Scanner(System.in); // Grabs the input from the keyboard
+        int disCorr_choice; // User choice from the terminal
+        // maybe recip should be perf state?
+        System.out.println("Matching data");
+
+        StructType schema = new StructType(new StructField[]{
+                new StructField("features", new VectorUDT(), false, Metadata.empty()),
+        });
+
+        Dataset<Row> temp = sparkSession.sql("SELECT U.potential_total_value_of_award, D.fips " +
+                "FROM USA AS U, DSTR AS D WHERE ((U.recipient_state_name = D.state) AND (U.action_date_fiscal_year = D.fy_declared)) ");
+//        temp = temp.withColumn("declaration_type",temp.col("declaration_type").cast("int"));
+//        temp = temp.withColumn("incident_type",temp.col("incident_type").cast("int"));
+//        temp.printSchema();
+//        System.out.print(temp.head().toString());
+        VectorAssembler vA = new VectorAssembler()
+                .setInputCols(new String[]{"potential_total_value_of_award", "fips"})
+                .setOutputCol("features")
+                .setHandleInvalid("skip");
+        temp = vA.transform(temp);
+
+        temp = temp.drop("potential_total_value_of_award", "fips");
+//        temp.printSchema();
+//        temp = temp.withColumn("potential_total_value_of_award",temp.col("potential_total_value_of_award").cast("int"));
+//        temp.printSchema();
+
+//        List<Row> dataTest = temp.collectAsList();
+//        // System.out.println();
+//        Vector = VectorUDT.(dataTest.get(0));
+
+//        System.out.println("Creating Vectors");
+//        temp = sparkSession.createDataFrame(dataTest, schema);
+        System.out.println("Choose a correlation measure");
+        System.out.println("\n0. Return" +
+                "\n1. Pearson" +
+                "\n2. Spearman");
+        while((disCorr_choice = disCorr_input.nextInt()) != 0) {
+            switch (disCorr_choice) {
+                case 0:
+                    return; // go back a level
+                case 1:
+                    // pearson
+                    Row rPearson = Correlation.corr(temp, "features").head();
+                    System.out.println("Pearson correlation matrix:\n" + rPearson.get(0).toString());
+                   break;
+                case 2:
+                    // spearman
+                    Row rSpearman = Correlation.corr(temp, "features", "spearman").head();
+                    System.out.println("Pearson correlation matrix:\n" + rSpearman.get(0).toString());
+                    return;
+                default:
+                    System.out.println("Unrecognized input, try again.");
+                    break;
+            }// End of choice switch statement ---
+            // make changes above too
+            System.out.println("\n0. Return" +
+                    "\n1. Pearson" +
+                    "\n2. Spearman");
+        }
+
+    }
+
+    public static void summarizeData(){
+        df.describe().show();
+    }
+    
     /* ---------------------------------------------------------------------- */
                             /* >>> Helper functions <<< */
     /* ---------------------------------------------------------------------- */
